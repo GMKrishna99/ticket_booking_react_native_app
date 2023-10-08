@@ -79,5 +79,3 @@ const styles = StyleSheet.create({
 });
 
 export default TabNavigator;
-
-11929
