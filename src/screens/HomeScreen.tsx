@@ -1,17 +1,126 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import * as React from 'react';
-import { Text, View, StyleSheet, Touchable, TouchableOpacity } from 'react-native';
-import { COLORS } from '../theme/theme';
+/* eslint-disable eqeqeq */
 
-interface HomeScreenProps { }
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useEffect, useState } from 'react';
+import { Text, View, StyleSheet, Touchable, TouchableOpacity, Dimensions, ScrollView, StatusBar, ActivityIndicator, FlatList } from 'react-native';
+import { COLORS, SPACING } from '../theme/theme';
+
+import { upcomingMovies, nowPlayingMovies, popularMovies, baseImagePath } from '../api/apicalls';
+
+import InputHeader from '../components/InputHeader';
+import CategoryHeader from '../components/CategoryHeader';
+import SubMovieCard from '../components/SubMovieCard';
+
+const { width, height } = Dimensions.get('window');
+
+const getNowPlayingMoviesList = async () => {
+  try {
+    let response = await fetch(nowPlayingMovies);
+    let json = await response.json();
+    return json;
+
+  } catch (error) {
+    console.error('something went  in getNowPlayingMoviesList function');
+  }
+};
+
+const getUpcomingMoviesList = async () => {
+  try {
+    let response = await fetch(upcomingMovies);
+    let json = await response.json();
+    return json;
+
+  } catch (error) {
+    console.error('something went  in getUpcomingMoviesMoviesList function');
+  }
+};
+
+const getPopularMoviesList = async () => {
+  try {
+    let response = await fetch(popularMovies);
+    let json = await response.json();
+    return json;
+
+  } catch (error) {
+    console.error('something went  in getPopularMoviesMoviesList function');
+  }
+};
+
+
 
 const HomeScreen = ({ navigation }: any) => {
+  // getting api data from database
+  const [nowPlayingMoviesList, setNowPlayingMoviesList] = useState<any>(undefined);
+  const [popularMoviesList, setPopularMoviesList] = useState<any>(undefined);
+  const [upcomingMoviesList, setUpcomingMoviesList] = useState<any>(undefined);
+  // const [baseImagePath, setBaseImagePath] = useState<any>(undefined);
+
+  useEffect(() => {
+    (async () => {
+      let tempNowPlaying = await getNowPlayingMoviesList();
+      setNowPlayingMoviesList(tempNowPlaying.results);
+
+      let tempUpcoming = await getUpcomingMoviesList();
+      setUpcomingMoviesList(tempUpcoming.results);
+
+      let tempPopular = await getPopularMoviesList();
+      setPopularMoviesList(tempPopular.results);
+    })();
+  }, []);
+
+  const searchMoviesFunction = () => {
+    navigation.navigate('Search');
+  };
+
+  if (
+    nowPlayingMoviesList === undefined &&
+    nowPlayingMoviesList == null &&
+    popularMoviesList === undefined &&
+    popularMoviesList == null &&
+    upcomingMoviesList === undefined &&
+    upcomingMoviesList == null) {
+    return (
+      <ScrollView style={styles.container} bounces={false} contentContainerStyle={styles.scrollViesContainer} >
+        <StatusBar hidden />
+        <View style={styles.InputHeaderContainer}>
+          <InputHeader searchFunction={searchMoviesFunction} />
+        </View>
+        <View style={styles.loadingContainer} >
+          <ActivityIndicator size="large" color={COLORS.Orange} />
+        </View>
+      </ScrollView>
+    );
+  }
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={() => { navigation.push('MoveDetails'); }}>
-        <Text> HomeScreen</Text>
-      </TouchableOpacity>
-    </View >
+    <ScrollView style={styles.container} bounces={false} contentContainerStyle={styles.scrollViesContainer} >
+      <StatusBar hidden />
+      <View style={styles.InputHeaderContainer}>
+        <InputHeader searchFunction={searchMoviesFunction} />
+      </View>
+      <CategoryHeader title={'Now Playing'} />
+      <CategoryHeader title={'Popular'} />
+      <CategoryHeader title={'Upcoming'} />
+      <FlatList
+        data={upcomingMoviesList}
+        keyExtractor={(item: any) => item.id.toString()}
+        horizontal
+        contentContainerStyle={styles.containerGap36}
+        renderItem={({ item, index }) => (
+          <SubMovieCard
+            shouldMarginatedAtEnd={true}
+            cardFunction={() => {
+              navigation.push('MovieDetails', { movieid: item.id });
+            }}
+            cardWidth={width / 3}
+            isFirst={index == 0 ? true : false}
+            isLast={index == upcomingMoviesList?.length - 1 ? true : false}
+            title={item.original_title}
+            imagePath={baseImagePath('w342', item.poster_path)}
+          />
+        )}
+      />
+    </ScrollView>
   );
 };
 
@@ -19,6 +128,22 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
-    // backgroundColor: COLORS.Black,
+    display: 'flex',
+    backgroundColor: COLORS.Black,
+  },
+  scrollViesContainer: {
+    flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+  InputHeaderContainer: {
+    marginHorizontal: SPACING.space_36,
+    marginTop: SPACING.space_28,
+  },
+  containerGap36: {
+    gap: SPACING.space_36,
   },
 });
