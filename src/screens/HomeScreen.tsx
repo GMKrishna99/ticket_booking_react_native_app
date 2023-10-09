@@ -81,7 +81,7 @@ const HomeScreen = ({ navigation }: any) => {
     upcomingMoviesList === undefined &&
     upcomingMoviesList == null) {
     return (
-      <ScrollView style={styles.container} bounces={false} contentContainerStyle={styles.scrollViesContainer} >
+      <ScrollView style={styles.container} bounces={false} contentContainerStyle={styles.scrollViewContainer} >
         <StatusBar hidden />
         <View style={styles.InputHeaderContainer}>
           <InputHeader searchFunction={searchMoviesFunction} />
@@ -93,22 +93,62 @@ const HomeScreen = ({ navigation }: any) => {
     );
   }
   return (
-    <ScrollView style={styles.container} bounces={false} contentContainerStyle={styles.scrollViesContainer} >
+    <ScrollView style={styles.container} bounces={false} >
       <StatusBar hidden />
       <View style={styles.InputHeaderContainer}>
         <InputHeader searchFunction={searchMoviesFunction} />
       </View>
       <CategoryHeader title={'Now Playing'} />
-      <CategoryHeader title={'Popular'} />
-      <CategoryHeader title={'Upcoming'} />
       <FlatList
-        data={upcomingMoviesList}
+        data={nowPlayingMoviesList}
         keyExtractor={(item: any) => item.id.toString()}
         horizontal
         contentContainerStyle={styles.containerGap36}
         renderItem={({ item, index }) => (
           <SubMovieCard
             shouldMarginatedAtEnd={true}
+            cardFunction={() => {
+              navigation.push('MovieDetails', { movieid: item.id });
+            }}
+            cardWidth={width / 3}
+            isFirst={index == 0 ? true : false}
+            isLast={index == upcomingMoviesList?.length - 1 ? true : false}
+            title={item.original_title}
+            imagePath={baseImagePath('w342', item.poster_path)}
+          />
+        )}
+      />
+      <CategoryHeader title={'Popular'} />
+      <FlatList
+        data={popularMoviesList}
+        keyExtractor={(item: any) => item.id.toString()}
+        horizontal
+        contentContainerStyle={styles.containerGap36}
+        renderItem={({ item, index }) => (
+          <SubMovieCard
+            shouldMarginatedAtEnd={true}
+            cardFunction={() => {
+              navigation.push('MovieDetails', { movieid: item.id });
+            }}
+            cardWidth={width / 3}
+            isFirst={index == 0 ? true : false}
+            isLast={index == upcomingMoviesList?.length - 1 ? true : false}
+            title={item.original_title}
+            imagePath={baseImagePath('w342', item.poster_path)}
+          />
+        )}
+      />
+      <CategoryHeader title={'Upcoming'} />
+      <FlatList
+        data={upcomingMoviesList}
+        keyExtractor={(item: any) => item.id}
+        horizontal
+        bounces={false}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.containerGap36}
+        renderItem={({ item, index }) => (
+          <SubMovieCard
+            shoudlMarginatedAtEnd={true}
             cardFunction={() => {
               navigation.push('MovieDetails', { movieid: item.id });
             }}
@@ -131,7 +171,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     backgroundColor: COLORS.Black,
   },
-  scrollViesContainer: {
+  scrollViewContainer: {
     flex: 1,
   },
   loadingContainer: {
