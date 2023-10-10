@@ -12,7 +12,7 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Tab" component={TabNavigator} options={{ animation: 'default' }} />
-        <Stack.Screen name="MoveDetails" component={MobileDetailScreen} options={{ animation: 'slide_from_right' }} />
+        <Stack.Screen name="MovieDetails" component={MobileDetailScreen} options={{ animation: 'slide_from_right' }} />
         <Stack.Screen name="SeatBooking" component={SeatBookingScreen} options={{ animation: 'slide_from_bottom' }} />
       </Stack.Navigator>
     </NavigationContainer>
