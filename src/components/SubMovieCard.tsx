@@ -5,7 +5,7 @@ import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/th
 
 const SubMovieCard = (props: any) => {
     return (
-        <TouchableOpacity onPress={() => { }}>
+        <TouchableOpacity onPress={() => props.cardFunction()}>
             <View style={[styles.container, props.shouldMarginatedAtEnd
                 ? props.isFirst ? { marginLeft: SPACING.space_36 }
                     : props.isLast
