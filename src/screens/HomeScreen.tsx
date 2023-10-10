@@ -11,6 +11,7 @@ import { upcomingMovies, nowPlayingMovies, popularMovies, baseImagePath } from '
 import InputHeader from '../components/InputHeader';
 import CategoryHeader from '../components/CategoryHeader';
 import SubMovieCard from '../components/SubMovieCard';
+import MovieCard from '../components/MovieCard';
 
 const { width, height } = Dimensions.get('window');
 
@@ -54,8 +55,6 @@ const HomeScreen = ({ navigation }: any) => {
   const [nowPlayingMoviesList, setNowPlayingMoviesList] = useState<any>(undefined);
   const [popularMoviesList, setPopularMoviesList] = useState<any>(undefined);
   const [upcomingMoviesList, setUpcomingMoviesList] = useState<any>(undefined);
-  // const [baseImagePath, setBaseImagePath] = useState<any>(undefined);
-
   useEffect(() => {
     (async () => {
       let tempNowPlaying = await getNowPlayingMoviesList();
@@ -105,17 +104,22 @@ const HomeScreen = ({ navigation }: any) => {
         horizontal
         contentContainerStyle={styles.containerGap36}
         renderItem={({ item, index }) => (
-          <SubMovieCard
+          // movie_card
+          <MovieCard
             shouldMarginatedAtEnd={true}
             cardFunction={() => {
               navigation.push('MovieDetails', { movieid: item.id });
             }}
-            cardWidth={width / 3}
+            cardWidth={width * 0.7}
             isFirst={index == 0 ? true : false}
             isLast={index == upcomingMoviesList?.length - 1 ? true : false}
             title={item.original_title}
-            imagePath={baseImagePath('w342', item.poster_path)}
+            imagePath={baseImagePath('w780', item.poster_path)}
+            genre={item.genre_ids.slice(1, 4)}
+            vote_average={item.vote_average}
+            vote_count={item.vote_count}
           />
+          // movie_card
         )}
       />
       <CategoryHeader title={'Popular'} />
