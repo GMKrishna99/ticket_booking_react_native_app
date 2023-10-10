@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.Black,
     },
     cardImage: {
-        aspectRatio: 2 / 3,
+        aspectRatio: 4 / 5,
         borderRadius: BORDERRADIUS.radius_20,
     },
     textTitle: {
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
         gap: SPACING.space_20,
         flexWrap: 'wrap',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     generBox: {
         borderColor: COLORS.WhiteRGBA50,
