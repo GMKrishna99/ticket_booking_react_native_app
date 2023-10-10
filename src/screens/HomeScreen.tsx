@@ -1,3 +1,4 @@
+
 /* eslint-disable eqeqeq */
 
 
@@ -58,7 +59,7 @@ const HomeScreen = ({ navigation }: any) => {
   useEffect(() => {
     (async () => {
       let tempNowPlaying = await getNowPlayingMoviesList();
-      setNowPlayingMoviesList(tempNowPlaying.results);
+      setNowPlayingMoviesList([{ id: 'dummy1' }, ...tempNowPlaying.results, { id: 'dummy2' }]);
 
       let tempUpcoming = await getUpcomingMoviesList();
       setUpcomingMoviesList(tempUpcoming.results);
@@ -101,32 +102,49 @@ const HomeScreen = ({ navigation }: any) => {
       <FlatList
         data={nowPlayingMoviesList}
         keyExtractor={(item: any) => item.id.toString()}
+        bounces={false}
+        showsHorizontalScrollIndicator={false}
+        snapToInterval={width * 0.7 + SPACING.space_36}
+        decelerationRate={0}
         horizontal
         contentContainerStyle={styles.containerGap36}
-        renderItem={({ item, index }) => (
-          // movie_card
-          <MovieCard
-            shouldMarginatedAtEnd={true}
-            cardFunction={() => {
-              navigation.push('MovieDetails', { movieid: item.id });
-            }}
-            cardWidth={width * 0.7}
-            isFirst={index == 0 ? true : false}
-            isLast={index == upcomingMoviesList?.length - 1 ? true : false}
-            title={item.original_title}
-            imagePath={baseImagePath('w780', item.poster_path)}
-            genre={item.genre_ids.slice(1, 4)}
-            vote_average={item.vote_average}
-            vote_count={item.vote_count}
-          />
-          // movie_card
-        )}
+        renderItem={({ item, index }) => {
+          if (!item.original_title) {
+            return (
+              <View
+                style={{
+                  width: (width - (width * 0.7 + SPACING.space_36 * 2)) / 2,
+                }} />
+            );
+          }
+          return (
+            // movie_card
+            <MovieCard
+              shoudlMarginatedAtEnd={true}
+              cardFunction={() => {
+                navigation.push('MovieDetails', { movieid: item.id });
+              }}
+              cardWidth={width * 0.7}
+              isFirst={index == 0 ? true : false}
+              isLast={index == upcomingMoviesList?.length - 1 ? true : false}
+              title={item.original_title}
+              imagePath={baseImagePath('w780', item.poster_path)}
+              genre={item.genre_ids.slice(1, 4)}
+              vote_average={item.vote_average}
+              vote_count={item.vote_count}
+            />
+            // movie_card
+          );
+
+
+        }}
       />
       <CategoryHeader title={'Popular'} />
       <FlatList
         data={popularMoviesList}
         keyExtractor={(item: any) => item.id.toString()}
         horizontal
+        bounces={false}
         contentContainerStyle={styles.containerGap36}
         renderItem={({ item, index }) => (
           <SubMovieCard
