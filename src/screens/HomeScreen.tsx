@@ -145,6 +145,7 @@ const HomeScreen = ({ navigation }: any) => {
         keyExtractor={(item: any) => item.id.toString()}
         horizontal
         bounces={false}
+        showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.containerGap36}
         renderItem={({ item, index }) => (
           <SubMovieCard
