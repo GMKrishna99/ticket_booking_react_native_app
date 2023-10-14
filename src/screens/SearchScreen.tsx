@@ -23,7 +23,6 @@ const SearchScreen = ({ navigation }: any) => {
       let response = await fetch(searchMovies(name));
       let json = await response.json();
       setSearchList(json.results);
-      console.log(json.results);
     } catch (error) {
       console.log("Something went wrong in Search movie function");
     }
