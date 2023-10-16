@@ -131,7 +131,7 @@ const MobileDetailScreen = ({ navigation, route }: any) => {
         <View>
           <TouchableOpacity style={styles.buttonBG} onPress={() => {
             navigation.push('SeatBooking', {
-              bgImage: baseImagePath('w780', movieData.backdrop_path),
+              BgImage: baseImagePath('w780', movieData.backdrop_path),
               PosterImage: baseImagePath('original', movieData.poster_path),
             });
           }}>
